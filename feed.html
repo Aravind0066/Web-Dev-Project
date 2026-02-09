@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Campus Feed</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+
+<header class="navbar">
+  <div class="nav-left">
+    <div class="logo">Campus Locator</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" id="loginBtn">Login</a>
+    <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>Campus Feed</h1>
+  <p>Live updates shared by students about classrooms, Wi-Fi, and campus activity.</p>
+</section>
+
+
+
+<main>
+  <h3>Campus Feed</h3>
+
+  <textarea id="feedInput" placeholder="Share a real-time campus update"></textarea>
+  <button onclick="addPost()">Post Update</button>
+
+  <div id="feedList"></div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
