@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Campus Locator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="home">
+
+<header class="navbar">
+  <div class="nav-left">
+    <div class="logo">Campus Locator</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </div>
+
+  <div class="nav-right">
+    <a href="login.html" id="loginBtn">Login</a>
+    <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+  </div>
+</header>
+
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Find Campus Resources in Real Time</h1>
+    <p>
+      Locate classrooms, Wi-Fi zones, restrooms and essentials —
+      updated live by students.
+    </p>
+    <button>Explore Resources</button>
+  </div>
+</section>
+
+<main>
+  <h3>Available Campus Resources</h3>
+
+  <div class="filters">
+    <button onclick="filterResources('all')">All</button>
+    <button onclick="filterResources('classroom')">Classroom</button>
+    <button onclick="filterResources('wifi')">WiFi</button>
+    <button onclick="filterResources('restroom')">Restroom</button>
+  </div>
+
+  <div id="resourceList" class="cards"></div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
