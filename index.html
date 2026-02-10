@@ -1,54 +1,229 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Campus Locator</title>
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: white;
+        color: black;
+      }
+
+      /* NAVBAR */
+      #navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 70px;
+        background: black;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 60px;
+        z-index: 1000;
+      }
+
+      #navbar nav a {
+        color: white;
+        margin-left: 28px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      /* HERO */
+      .hero {
+        height: 100vh;
+        background: url("./images/blue-brush-stroke-frame.jpg") center/cover no-repeat;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: url("./images/blue-brush-stroke-frame.jpg") center / cover no-repeat;
+        overflow: hidden;
+      }
+
+      /* smooth bottom fade */
+      .hero-fade {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 30%;
+        pointer-events: none;
+
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0.35),
+          rgba(255,255,255,0.7),
+          rgba(255,255,255,1)
+        );
+      }
+
+
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+      }
+
+      .hero-content {
+        position: relative;
+        text-align: center;
+        max-width: 600px;
+      }
+
+      .hero-content h1 {
+        font-size: 42px;
+        margin-bottom: 16px;
+      }
+
+      .hero-content p {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+
+      .hero-content button {
+        padding: 12px 32px;
+        background: black;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      
+      /* FEATURES */
+      .features {
+        padding: 120px 100px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+
+        /* FEATURE BOX STYLING */
+        
+      }
+
+      /* HOVER EFFECT */
+      .feature:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 1);
+
+        box-shadow:
+          0 28px 60px rgba(0, 0, 0, 0.12),
+          0 10px 28px rgba(0, 0, 0, 0.06);
+      }
+
+      .feature {
+        margin-bottom: 80px;
+        min-width: 400px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+        
+        padding: 40px;
+
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+
+        box-shadow:
+          0 18px 40px rgba(0, 0, 0, 0.08),
+          0 4px 12px rgba(0, 0, 0, 0.04);
+
+        transition:
+          transform 0.35s ease,
+          box-shadow 0.35s ease,
+          background 0.35s ease;
+      }
+
+      .feature h3 {
+        font-size: 22px;
+        margin-bottom: 10px;
+      }
+
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 0.8s ease;
+      }
+
+      .reveal.left {
+        transform: translateX(-400px);
+      }
+
+      .reveal.right {
+        transform: translateX(400px);
+      }
+
+      .reveal.active {
+        opacity: 1;
+        transform: translate(0);
+      }
+
+  </style>
 </head>
-<body class="home">
 
-<header class="navbar">
-  <div class="nav-left">
-    <div class="logo">Campus Locator</div>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="feed.html">Feed</a>
-      <a href="queries.html">Queries</a>
-      <a href="essentials.html">Essentials</a>
-      <a href="profile.html">Profile</a>
-    </nav>
-  </div>
+<body>
 
-  <div class="nav-right">
-    <a href="login.html" id="loginBtn">Login</a>
-    <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
-  </div>
+<header id="navbar">
+  <div class="logo">Campus Locator</div>
+  <nav>
+    <a href="./index.html">Home</a>
+    <a href="./feed.html">Feed</a>
+    <a href="#">Queries</a>
+    <a href="#">Essentials</a>
+    <a href="#">Profile</a>
+  </nav>
 </header>
 
-
 <section class="hero">
+  <div class="hero-fade"></div>
   <div class="hero-content">
     <h1>Find Campus Resources in Real Time</h1>
-    <p>
-      Locate classrooms, Wi-Fi zones, restrooms and essentials —
-      updated live by students.
-    </p>
-    <button>Explore Resources</button>
+    <p>Classrooms. Wi-Fi. Essentials. Verified by students.</p>
+    <button>Explore</button>
   </div>
 </section>
 
-<main>
-  <h3>Available Campus Resources</h3>
 
-  <div class="filters">
-    <button onclick="filterResources('all')">All</button>
-    <button onclick="filterResources('classroom')">Classroom</button>
-    <button onclick="filterResources('wifi')">WiFi</button>
-    <button onclick="filterResources('restroom')">Restroom</button>
+<section class="features">
+  <div class="feature reveal left">
+    <h3>Live Updates</h3>
+    <p>Resources updated by students in real time.</p>
   </div>
 
-  <div id="resourceList" class="cards"></div>
-</main>
+  <div class="feature reveal right">
+    <h3>Smart Filters</h3>
+    <p>Find exactly what you need in seconds.</p>
+  </div>
 
-<script src="script.js"></script>
+  <div class="feature reveal left">
+    <h3>Minimal & Fast</h3>
+    <p>No clutter. No noise. Just information.</p>
+  </div>
+</section>
+
+<script>
+  const reveals = document.querySelectorAll(".reveal");
+
+  window.addEventListener("scroll", () => {
+    const trigger = window.innerHeight * 0.85;
+
+    reveals.forEach(el => {
+      const top = el.getBoundingClientRect().top;
+      if (top < trigger) {
+        el.classList.add("active");
+      }
+    });
+  });
+
+</script>
 </body>
 </html>
