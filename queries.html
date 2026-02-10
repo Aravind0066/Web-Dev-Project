@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Queries</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="inner">
+
+<header class="navbar">
+  <div class="nav-left">
+    <div class="logo">Campus Locator</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </div>
+  <div class="nav-right">
+    <a href="login.html" id="loginBtn">Login</a>
+    <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+  </div>
+</header>
+
+<section class="page-header">
+  <h1>Student Queries</h1>
+  <p>Ask questions, find answers, and get help from the campus community.</p>
+</section>
+
+
+
+<main>
+  <h3>Student Queries</h3>
+
+  <input id="queryTitle" placeholder="Query title">
+  <textarea id="queryDesc" placeholder="Describe your query"></textarea>
+  <button data-requires-login onclick="addQuery()">Submit Query</button>
+
+
+  <div id="queryList"></div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
