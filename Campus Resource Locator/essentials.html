@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campus Essentials - Campus Locator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: white;
+      color: black;
+    }
+
+    #navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px;
+      z-index: 1000;
+    }
+
+    #navbar nav a {
+      color: white;
+      margin-left: 28px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.3s;
+    }
+
+    #navbar nav a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-right a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .page-hero {
+      margin-top: 70px;
+      height: 40vh;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 10%, transparent 50%);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .page-hero-content {
+      position: relative;
+      text-align: center;
+      color: white;
+      z-index: 1;
+    }
+
+    .page-hero-content h1 {
+      font-size: 48px;
+      margin-bottom: 12px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .page-hero-content p {
+      font-size: 18px;
+      opacity: 0.95;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .admin-controls {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 50px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+      animation: slideDown 0.6s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .admin-controls h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .admin-controls input {
+      width: calc(100% - 140px);
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-right: 12px;
+      transition: border-color 0.3s;
+    }
+
+    .admin-controls input:focus {
+      outline: none;
+      border-color: #4facfe;
+    }
+
+    .add-btn {
+      padding: 14px 28px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .essentials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .essential-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      border-left: 4px solid #4facfe;
+      animation: cardAppear 0.5s ease;
+    }
+
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .essential-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .essential-icon {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    .essential-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    .essential-desc {
+      color: #666;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .essential-actions {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .delete-btn {
+      padding: 8px 16px;
+      background: #ff4757;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background 0.3s;
+    }
+
+    .delete-btn:hover {
+      background: #e03e4a;
+    }
+
+    .no-essentials {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 16px;
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+
+<header id="navbar">
+  <div class="logo">Campus Locator</div>
+  <div style="display: flex; align-items: center;">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+    <div class="nav-right">
+      <a href="login.html" id="loginBtn">Login</a>
+      <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <h1>Campus Essentials</h1>
+    <p>Important facilities and services available across the campus</p>
+  </div>
+</section>
+
+<main>
+  <div class="admin-controls" id="adminControls" style="display:none;">
+    <h3>Add Essential Service</h3>
+    <input id="newEssential" type="text" placeholder="Enter essential service (e.g., Library, Cafeteria, Medical Center)">
+    <button class="add-btn" onclick="addEssential()">Add Essential</button>
+  </div>
+
+  <div class="essentials-grid" id="essentialsList"></div>
+</main>
+
+<script>
+function checkLogin() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  const isAdmin = localStorage.getItem("role") === "admin";
+
+  document.getElementById("loginBtn").style.display = isLoggedIn ? "none" : "inline";
+  document.getElementById("logoutBtn").style.display = isLoggedIn ? "inline" : "none";
+  document.getElementById("adminControls").style.display = isAdmin ? "block" : "none";
+}
+
+function logout() {
+  localStorage.clear();
+  location.reload();
+}
+
+function initEssentials() {
+  if (!localStorage.getItem("essentials")) {
+    localStorage.setItem("essentials", JSON.stringify([]));
+  }
+}
+
+function addEssential() {
+  const input = document.getElementById("newEssential");
+  const name = input.value.trim();
+
+  if (!name) return alert("Enter a valid name");
+
+  const essentials = JSON.parse(localStorage.getItem("essentials"));
+
+  essentials.push({
+    id: Date.now(),
+    title: name,
+    description: "Campus facility",
+    createdAt: Date.now()
+  });
+
+  localStorage.setItem("essentials", JSON.stringify(essentials));
+  input.value = "";
+  loadEssentials();
+}
+
+function deleteEssential(id) {
+  if (!confirm("Remove this item?")) return;
+
+  const essentials = JSON.parse(localStorage.getItem("essentials"))
+    .filter(item => item.id !== id);
+
+  localStorage.setItem("essentials", JSON.stringify(essentials));
+  loadEssentials();
+}
+
+function loadEssentials() {
+  const essentials = JSON.parse(localStorage.getItem("essentials"));
+  const isAdmin = localStorage.getItem("role") === "admin";
+  const container = document.getElementById("essentialsList");
+
+  if (!essentials.length) {
+    container.innerHTML = `
+      <div class="no-essentials fade-in">
+        No campus essentials listed yet.
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = essentials.map((item, index) => `
+    <div class="essential-card fade-up" style="animation-delay:${index * 0.08}s">
+      <h3 class="essential-title">${item.title}</h3>
+      <p class="essential-desc">${item.description}</p>
+      ${isAdmin ? `
+        <button class="delete-btn" onclick="deleteEssential(${item.id})">
+          Remove
+        </button>` : ''}
+    </div>
+  `).join("");
+}
+
+initEssentials();
+checkLogin();
+loadEssentials();
+</script>
+
+
+</body>
+</html>
