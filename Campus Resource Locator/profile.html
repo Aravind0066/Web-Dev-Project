@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile - Campus Locator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: white;
+      color: black;
+    }
+
+    #navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px;
+      z-index: 1000;
+    }
+
+    #navbar nav a {
+      color: white;
+      margin-left: 28px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.3s;
+    }
+
+    #navbar nav a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-right a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .page-hero {
+      margin-top: 70px;
+      height: 40vh;
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      width: 300%;
+      height: 300%;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 50px,
+        rgba(255,255,255,0.1) 50px,
+        rgba(255,255,255,0.1) 100px
+      );
+      animation: slide 20s linear infinite;
+    }
+
+    @keyframes slide {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(100px, 100px); }
+    }
+
+    .page-hero-content {
+      position: relative;
+      text-align: center;
+      color: #333;
+      z-index: 1;
+    }
+
+    .page-hero-content h1 {
+      font-size: 48px;
+      margin-bottom: 12px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .page-hero-content p {
+      font-size: 18px;
+      opacity: 0.85;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .profile-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 50px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      animation: scaleIn 0.6s ease;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      color: white;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-name {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .profile-role {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
+    .profile-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .section-header {
+      font-size: 24px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #e0e0e0;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .activity-item {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      transition: all 0.3s ease;
+      animation: slideInLeft 0.5s ease;
+      border-left: 4px solid #667eea;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .activity-item:hover {
+      transform: translateX(8px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .activity-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #222;
+    }
+
+    .activity-content {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .activity-meta {
+      color: #999;
+      font-size: 13px;
+    }
+
+    .no-activity {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 16px;
+    }
+
+    .login-required {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .login-required h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      color: #333;
+    }
+
+    .login-required p {
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .login-required a {
+      display: inline-block;
+      padding: 12px 32px;
+      background: black;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: transform 0.2s;
+    }
+
+    .login-required a:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+
+<header id="navbar">
+  <div class="logo">Campus Locator</div>
+  <div style="display: flex; align-items: center;">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+    <div class="nav-right">
+      <a href="login.html" id="loginBtn">Login</a>
+      <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <h1>My Profile</h1>
+    <p>View your activity, contributions, and campus interactions</p>
+  </div>
+</section>
+
+<main id="mainContent">
+</main>
+
+
+<script>
+function checkLogin() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+  document.getElementById("loginBtn").style.display = isLoggedIn ? "none" : "inline";
+  document.getElementById("logoutBtn").style.display = isLoggedIn ? "inline" : "none";
+  return isLoggedIn;
+}
+
+function logout() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("role");
+  window.location.href = "index.html";
+}
+
+function loadProfile() {
+  const mainContent = document.getElementById("mainContent");
+  
+  if (!checkLogin()) {
+    mainContent.innerHTML = `
+      <div class="login-required">
+        <h3>Login Required</h3>
+        <p>Please login to view your profile and activity</p>
+        <a href="login.html">Go to Login</a>
+      </div>
+    `;
+    return;
+  }
+
+  const posts = JSON.parse(localStorage.getItem("feedPosts") || "[]");
+  const queries = JSON.parse(localStorage.getItem("queries") || "[]");
+  const role = localStorage.getItem("role") || "student";
+
+  const myPosts = posts.filter(p => p.author === "Student");
+  const myQueries = queries.filter(q => q.author === "Student");
+
+  mainContent.innerHTML = `
+    <div class="profile-card">
+      <div class="profile-avatar">👤</div>
+      <div class="profile-name">Student User</div>
+      <div class="profile-role">${role.charAt(0).toUpperCase() + role.slice(1)}</div>
+      
+      <div class="profile-stats">
+        <div class="stat">
+          <div class="stat-number">${myPosts.length}</div>
+          <div class="stat-label">Updates Posted</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">${myQueries.length}</div>
+          <div class="stat-label">Queries Asked</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">${myPosts.length + myQueries.length}</div>
+          <div class="stat-label">Total Contributions</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="section-header">My Recent Updates</h2>
+    <div id="myPosts">
+      ${myPosts.length > 0 ? myPosts.slice(0, 5).map(post => `
+        <div class="activity-item">
+          <div class="activity-title">Campus Update</div>
+          <div class="activity-content">${post.content}</div>
+          <div class="activity-meta">Posted on ${post.timestamp}</div>
+        </div>
+      `).join('') : '<div class="no-activity">You haven\'t posted any updates yet</div>'}
+    </div>
+
+    <h2 class="section-header" style="margin-top: 60px;">My Queries</h2>
+    <div id="myQueries">
+      ${myQueries.length > 0 ? myQueries.slice(0, 5).map(query => `
+        <div class="activity-item">
+          <div class="activity-title">${query.title}</div>
+          <div class="activity-content">${query.description}</div>
+          <div class="activity-meta">
+            Asked on ${query.timestamp} • 
+            ${query.answers ? query.answers.length : 0} 
+            ${query.answers && query.answers.length === 1 ? 'answer' : 'answers'}
+          </div>
+        </div>
+      `).join('') : '<div class="no-activity">You haven\'t asked any questions yet</div>'}
+    </div>
+  `;
+}
+
+loadProfile();
+</script>
+
+</body>
+</html>
