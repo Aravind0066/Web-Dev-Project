@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Queries - Campus Locator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: white;
+      color: black;
+    }
+
+    #navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px;
+      z-index: 1000;
+    }
+
+    #navbar nav a {
+      color: white;
+      margin-left: 28px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.3s;
+    }
+
+    #navbar nav a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-right a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .page-hero {
+      margin-top: 70px;
+      height: 40vh;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="2" fill="rgba(255,255,255,0.15)"/></svg>');
+      animation: float 15s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-60px); }
+    }
+
+    .page-hero-content {
+      position: relative;
+      text-align: center;
+      color: white;
+      z-index: 1;
+    }
+
+    .page-hero-content h1 {
+      font-size: 48px;
+      margin-bottom: 12px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .page-hero-content p {
+      font-size: 18px;
+      opacity: 0.95;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 40px;
+    }
+
+    .query-form {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 50px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+      animation: slideIn 0.6s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .query-form h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .query-form input,
+    .query-form textarea {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      margin-bottom: 16px;
+      transition: border-color 0.3s;
+    }
+
+    .query-form input:focus,
+    .query-form textarea:focus {
+      outline: none;
+      border-color: #f5576c;
+    }
+
+    .query-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .submit-btn {
+      padding: 12px 32px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .queries-header {
+      font-size: 26px;
+      margin-bottom: 30px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.3s forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    .query-item {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: queryAppear 0.5s ease;
+      border-left: 4px solid #f5576c;
+    }
+
+    @keyframes queryAppear {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .query-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .query-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #222;
+    }
+
+    .query-desc {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .query-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #888;
+      font-size: 13px;
+    }
+
+    .query-author {
+      font-weight: 500;
+    }
+
+    .query-time {
+      font-style: italic;
+    }
+
+    .answer-section {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .answer-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .answer-btn {
+      padding: 8px 20px;
+      background: #f5576c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .answer-btn:hover {
+      background: #e04658;
+    }
+
+    .answer-list {
+      margin-top: 16px;
+    }
+
+    .answer {
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      border-left: 3px solid #f5576c;
+    }
+
+    .answer-author {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .answer-text {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .no-queries {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header id="navbar">
+  <div class="logo">Campus Locator</div>
+  <div style="display: flex; align-items: center;">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+    <div class="nav-right">
+      <a href="login.html" id="loginBtn">Login</a>
+      <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-content">
+    <h1>Student Queries</h1>
+    <p>Ask questions, find answers, and get help from the campus community</p>
+  </div>
+</section>
+
+<main>
+  <div class="query-form">
+    <h3>Ask a Question</h3>
+    <input id="queryTitle" type="text" placeholder="What's your question? (e.g., Where is the nearest printer?)">
+    <textarea id="queryDesc" placeholder="Provide more details about your query..."></textarea>
+    <button class="submit-btn" onclick="addQuery()">Submit Query</button>
+  </div>
+
+  <h2 class="queries-header">Recent Queries</h2>
+  <div id="queryList"></div>
+</main>
+
+<script>
+function checkLogin() {
+  const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (loginBtn) loginBtn.style.display = isLoggedIn ? "none" : "inline";
+  if (logoutBtn) logoutBtn.style.display = isLoggedIn ? "inline" : "none";
+}
+
+function logout() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("role");
+  location.reload();
+}
+
+function initQueries() {
+  const data = localStorage.getItem("queries");
+
+  try {
+    const parsed = JSON.parse(data);
+    if (!Array.isArray(parsed)) throw new Error();
+  } catch {
+    localStorage.setItem("queries", JSON.stringify([]));
+  }
+}
+
+function addQuery() {
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    alert("Login required");
+    location.href = "login.html";
+    return;
+  }
+
+  const titleInput = document.getElementById("queryTitle");
+  const descInput = document.getElementById("queryDesc");
+
+  const title = titleInput.value.trim();
+  const description = descInput.value.trim();
+
+  if (!title || !description) {
+    alert("Fill all fields");
+    return;
+  }
+
+  const queries = JSON.parse(localStorage.getItem("queries"));
+
+  queries.unshift({
+    id: Date.now(),
+    title,
+    description,
+    author: "Student",
+    timestamp: Date.now(),
+    answers: []
+  });
+
+  localStorage.setItem("queries", JSON.stringify(queries));
+
+  titleInput.value = "";
+  descInput.value = "";
+  loadQueries();
+}
+
+function addAnswer(queryId) {
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    alert("Login required");
+    location.href = "login.html";
+    return;
+  }
+
+  const input = document.getElementById(`answer-${queryId}`);
+  const text = input.value.trim();
+
+  if (!text) return alert("Answer cannot be empty");
+
+  const queries = JSON.parse(localStorage.getItem("queries"));
+  const query = queries.find(q => q.id === queryId);
+
+  if (!query) return;
+
+  if (!Array.isArray(query.answers)) query.answers = [];
+
+  query.answers.push({
+    author: "Student Helper",
+    text,
+    timestamp: Date.now()
+  });
+
+  localStorage.setItem("queries", JSON.stringify(queries));
+  loadQueries();
+}
+
+function loadQueries() {
+  const queries = JSON.parse(localStorage.getItem("queries"));
+  const queryList = document.getElementById("queryList");
+
+  if (!queries.length) {
+    queryList.innerHTML = `
+      <div class="no-queries fade-in">
+        No queries yet.
+      </div>`;
+    return;
+  }
+
+  queryList.innerHTML = queries.map(query => {
+    const title = query.title || "";
+    const desc = query.description || "";
+    const author = query.author || "Student";
+    const time = query.timestamp
+      ? new Date(query.timestamp).toLocaleString()
+      : "";
+
+    const answers = Array.isArray(query.answers) ? query.answers : [];
+
+    return `
+      <div class="query-item fade-up">
+        <div class="query-title">${title}</div>
+        <div class="query-desc">${desc}</div>
+        <div class="query-meta">
+          <span>${author}</span>
+          <span>${time}</span>
+        </div>
+
+        <div class="answer-section">
+          <textarea
+            id="answer-${query.id}"
+            class="answer-input"
+            placeholder="Write an answer..."></textarea>
+
+          <button class="answer-btn" onclick="addAnswer(${query.id})">
+            Post Answer
+          </button>
+
+          ${answers.length ? `
+            <div class="answer-list">
+              ${answers.map(a => `
+                <div class="answer">
+                  <div class="answer-author">${a.author || "Student"}</div>
+                  <div class="answer-text">${a.text || ""}</div>
+                </div>
+              `).join("")}
+            </div>
+          ` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+initQueries();
+checkLogin();
+loadQueries();
+</script>
+
+
+</body>
+</html>
