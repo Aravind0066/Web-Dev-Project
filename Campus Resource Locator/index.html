@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Locator - Find Campus Resources in Real Time</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: white;
+      color: black;
+      overflow-x: hidden;
+    }
+
+    #navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #navbar nav {
+      display: flex;
+    }
+
+    #navbar nav a {
+      color: white;
+      margin-left: 28px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.3s ease;
+    }
+
+    #navbar nav a:hover {
+      opacity: 0.7;
+    }
+
+    .nav-right a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-right a:hover {
+      opacity: 0.7;
+    }
+
+    .hero {
+      margin-top: 70px;
+      height: calc(100vh - 70px);
+      /* background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234facfe;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2300f2fe;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grad)'/%3E%3C/svg%3E") center/cover; */
+      background-color: #4facfe;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: drift 20s linear infinite;
+    }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .hero-fade {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 30%;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0.35),
+        rgba(255,255,255,0.7),
+        rgba(255,255,255,1)
+      );
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      text-align: center;
+      max-width: 700px;
+      padding: 0 20px;
+      z-index: 3;
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-content h1 {
+      font-size: 52px;
+      margin-bottom: 20px;
+      color: white;
+      font-weight: 700;
+      line-height: 1.2;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-content p {
+      font-size: 18px;
+      margin-bottom: 35px;
+      color: white;
+      opacity: 0.95;
+      line-height: 1.6;
+    }
+
+    .hero-content button {
+      padding: 16px 48px;
+      background: black;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-content button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-content button:active {
+      transform: translateY(-1px);
+    }
+
+    .features {
+      padding: 120px 60px;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .feature {
+      flex: 1;
+      min-width: 280px;
+      max-width: 380px;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .feature:hover {
+      transform: translateY(-12px);
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.12), 0 10px 28px rgba(0, 0, 0, 0.08);
+      border-color: rgba(79, 172, 254, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .feature h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      color: #222;
+      font-weight: 600;
+    }
+
+    .feature p {
+      color: #666;
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.left {
+      transform: translateX(-150px) translateY(50px);
+    }
+
+    .reveal.right {
+      transform: translateX(150px) translateY(50px);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
+
+    footer {
+      background: #1a1a1a;
+      color: white;
+      padding: 60px 60px 30px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.3s;
+    }
+
+    .footer-links a:hover {
+      opacity: 0.7;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+      margin-top: 20px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+      #navbar {
+        padding: 0 30px;
+      }
+
+      .hero-content h1 {
+        font-size: 36px;
+      }
+
+      .hero-content p {
+        font-size: 16px;
+      }
+
+      .features {
+        padding: 80px 30px;
+      }
+
+      .feature {
+        min-width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="navbar">
+  <div class="logo">Campus Locator</div>
+  <div class="nav-container">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+    <div class="nav-right">
+      <a href="login.html" id="loginBtn">Login</a>
+      <a href="#" id="logoutBtn" onclick="logout()" style="display:none;">Logout</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-fade"></div>
+  <div class="hero-content">
+    <h1>Find Campus Resources in Real Time</h1>
+    <p>Classrooms. Wi-Fi. Essentials. Verified by students, for students.</p>
+    <button onclick="window.location.href='feed.html'">Explore Campus</button>
+  </div>
+</section>
+
+<section class="features">
+  <div class="feature reveal left">
+    <h3>Live Updates</h3>
+    <p>Resources updated by students in real time. Know what's available right now across campus.</p>
+  </div>
+
+  <div class="feature reveal">
+    <h3>Smart Filters</h3>
+    <p>Find exactly what you need in seconds. Search, filter, and discover campus resources effortlessly.</p>
+  </div>
+
+  <div class="feature reveal right">
+    <h3>Minimal & Fast</h3>
+    <p>No clutter. No noise. Just the information you need to navigate campus life efficiently.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="feed.html">Feed</a>
+      <a href="queries.html">Queries</a>
+      <a href="essentials.html">Essentials</a>
+      <a href="profile.html">Profile</a>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Campus Locator. Built by students, for students.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function checkLogin() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    
+    if (loginBtn && logoutBtn) {
+      loginBtn.style.display = isLoggedIn ? "none" : "inline";
+      logoutBtn.style.display = isLoggedIn ? "inline" : "none";
+    }
+  }
+
+  function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userEmail");
+    window.location.reload();
+  }
+
+  const reveals = document.querySelectorAll(".reveal");
+
+  function checkReveal() {
+    const trigger = window.innerHeight * 0.85;
+
+    reveals.forEach(el => {
+      const top = el.getBoundingClientRect().top;
+      if (top < trigger) {
+        el.classList.add("active");
+      }
+    });
+  }
+
+  window.addEventListener("scroll", checkReveal);
+  window.addEventListener("load", () => {
+    checkLogin();
+    checkReveal();
+  });
+
+  checkLogin();
+  checkReveal();
+</script>
+
+</body>
+</html>
