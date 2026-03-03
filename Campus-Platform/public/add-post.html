@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Post</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:"Segoe UI",sans-serif;
+    }
+
+    body{
+      background:white;
+      color:black;
+    }
+
+    #navbar{
+      position:fixed;
+      top:0;
+      width:100%;
+      height:70px;
+      background:black;
+      color:white;
+      display:flex;
+      align-items:center;
+      padding:0 60px;
+      z-index:1000;
+    }
+
+    #navbar a{
+      color:white;
+      text-decoration:none;
+      font-size:14px;
+    }
+
+    .hero{
+      margin-top:70px;
+      padding:80px 20px;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:white;
+      text-align:center;
+    }
+
+    .form-container{
+      max-width:800px;
+      margin:60px auto;
+      padding:40px;
+      background:white;
+      border-radius:18px;
+      box-shadow:0 20px 45px rgba(0,0,0,0.08);
+    }
+
+    .form-group{
+      margin-bottom:20px;
+    }
+
+    .form-group label{
+      display:block;
+      margin-bottom:8px;
+      font-size:14px;
+      font-weight:500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-size:14px;
+    }
+
+    textarea{
+      resize:none;
+      height:100px;
+    }
+
+    .submit-btn{
+      padding:12px 20px;
+      background:black;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .submit-btn:hover{
+      opacity:0.8;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header id="navbar">
+  <a href="community.html">← Back to Community</a>
+</header>
+
+<section class="hero">
+  <h1>Create a Post</h1>
+  <p>Share updates or raise structured queries</p>
+</section>
+
+<div class="form-container">
+
+  <div class="form-group">
+    <label>Post Type</label>
+    <select id="postType" onchange="toggleFields()">
+      <option value="update">Update</option>
+      <option value="query">Query</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Category</label>
+    <select id="category">
+      <option value="Classroom">Classroom</option>
+      <option value="Library">Library</option>
+      <option value="WiFi">WiFi</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <!-- Update Fields -->
+  <div id="updateFields">
+    <div class="form-group">
+      <label>Update Content</label>
+      <textarea id="updateContent" placeholder="Enter your update..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Expiry Duration</label>
+      <select id="expiryDuration">
+        <option value="1">1 Hour</option>
+        <option value="4">4 Hours</option>
+        <option value="24">1 Day</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Priority</label>
+      <select id="priority">
+        <option value="normal">Normal</option>
+        <option value="important">Important</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Query Fields -->
+  <div id="queryFields" style="display:none;">
+    <div class="form-group">
+      <label>Query Title</label>
+      <input type="text" id="queryTitle" placeholder="Enter query title">
+    </div>
+
+    <div class="form-group">
+      <label>Query Description</label>
+      <textarea id="queryDesc" placeholder="Explain your query..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Priority</label>
+      <select id="queryPriority">
+        <option value="normal">Normal</option>
+        <option value="important">Important</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="submitPost()">Submit</button>
+
+</div>
+
+<script>
+  function toggleFields(){
+    const type = document.getElementById("postType").value;
+    document.getElementById("updateFields").style.display =
+      type === "update" ? "block" : "none";
+    document.getElementById("queryFields").style.display =
+      type === "query" ? "block" : "none";
+  }
+
+  async function submitPost(){
+    const type = document.getElementById("postType").value;
+    const category = document.getElementById("category").value;
+
+    let title, body, priority = "normal", expires_at = null;
+
+    if (type === "update") {
+      body = document.getElementById("updateContent").value.trim();
+      title = body.slice(0, 80) || "Community update";
+      priority = document.getElementById("priority").value;
+      const hours = parseInt(document.getElementById("expiryDuration").value, 10);
+      // Create expiry date: current time + hours, format as MySQL datetime (YYYY-MM-DD HH:MM:SS)
+      const d = new Date();
+      d.setTime(d.getTime() + (hours * 60 * 60 * 1000)); // Add hours in milliseconds
+      // Format as MySQL datetime: YYYY-MM-DD HH:MM:SS
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      const hour = String(d.getHours()).padStart(2, '0');
+      const minute = String(d.getMinutes()).padStart(2, '0');
+      const second = String(d.getSeconds()).padStart(2, '0');
+      expires_at = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    } else {
+      title = document.getElementById("queryTitle").value.trim();
+      body = document.getElementById("queryDesc").value.trim();
+      priority = document.getElementById("queryPriority").value;
+      if (!title || !body) {
+        alert("Please fill query title and description.");
+        return;
+      }
+    }
+
+    if (!body && type === "update") {
+      alert("Please enter update content.");
+      return;
+    }
+
+    if (!localStorage.getItem("isLoggedIn")) {
+      alert("Please log in to post.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    try {
+      console.log("Submitting post:", { type, title, body: body.substring(0, 50), category, priority, expires_at });
+      
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ type, title, body, category, priority, expires_at })
+      });
+      
+      const data = await res.json();
+      console.log("Response:", data);
+
+      if (!res.ok || !data.success) {
+        alert(data.message || "Failed to create post. Status: " + res.status);
+        if (res.status === 401) {
+          alert("Session expired. Please log in again.");
+          window.location.href = "login.html";
+        }
+        return;
+      }
+      
+      alert("Post created successfully!");
+      window.location.href = "community.html";
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error. Is the server running? Error: " + err.message);
+    }
+  }
+</script>
+
+</body>
+</html>

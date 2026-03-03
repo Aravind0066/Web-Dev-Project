@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Noticeboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:"Segoe UI",sans-serif;
+    }
+
+    body{
+      background:white;
+      color:black;
+    }
+
+    /* NAVBAR */
+    #navbar{
+      position:fixed;
+      top:0;
+      width:100%;
+      height:70px;
+      background:black;
+      color:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 60px;
+      z-index:1000;
+    }
+
+    #navbar nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:28px;
+      font-size:14px;
+      transition:0.3s;
+    }
+
+    #navbar nav a:hover{
+      opacity:0.7;
+    }
+
+    /* HERO */
+    .hero{
+      margin-top:70px;
+      padding:80px 20px;
+      background:linear-gradient(135deg,#ff512f 0%,#dd2476 100%);
+      color:white;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:38px;
+      margin-bottom:10px;
+    }
+
+    .hero p{
+      opacity:0.9;
+    }
+
+    /* NOTICE SECTION */
+    .notice-container{
+      max-width:1000px;
+      margin:60px auto;
+      padding:0 20px;
+      display:grid;
+      gap:25px;
+    }
+
+    .notice-card{
+      background:white;
+      border-radius:18px;
+      padding:28px;
+      box-shadow:0 20px 45px rgba(0,0,0,0.08);
+      transition:0.3s;
+      position:relative;
+    }
+
+    .notice-card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 30px 60px rgba(0,0,0,0.12);
+    }
+
+    .notice-title{
+      font-size:20px;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+
+    .notice-content{
+      font-size:14px;
+      color:#555;
+      line-height:1.6;
+      margin-bottom:12px;
+    }
+
+    .notice-meta{
+      font-size:12px;
+      color:#888;
+    }
+
+    .badge{
+      position:absolute;
+      top:20px;
+      right:20px;
+      padding:6px 12px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:600;
+    }
+
+    .normal{
+      background:#e0e0e0;
+      color:#333;
+    }
+
+    .important{
+      background:#ffc107;
+      color:black;
+    }
+
+    .emergency{
+      background:#dc3545;
+      color:white;
+    }
+
+    /* ADMIN BUTTON */
+    .add-notice-btn{
+      position:fixed;
+      bottom:30px;
+      right:30px;
+      padding:14px 20px;
+      border-radius:30px;
+      border:none;
+      background:black;
+      color:white;
+      cursor:pointer;
+      font-size:14px;
+      box-shadow:0 15px 30px rgba(0,0,0,0.2);
+      transition:0.3s;
+      display:none;
+    }
+
+    .add-notice-btn:hover{
+      transform:scale(1.05);
+    }
+
+    /* MODAL STYLES */
+    .modal{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.5);
+      z-index:2000;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .modal.active{
+      display:flex;
+    }
+
+    .modal-content{
+      background:white;
+      border-radius:18px;
+      padding:30px;
+      width:90%;
+      max-width:600px;
+      max-height:90vh;
+      overflow-y:auto;
+    }
+
+    .modal-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .modal-header h2{
+      font-size:24px;
+    }
+
+    .close-btn{
+      background:none;
+      border:none;
+      font-size:28px;
+      cursor:pointer;
+      color:#666;
+    }
+
+    .close-btn:hover{
+      color:black;
+    }
+
+    .form-group{
+      margin-bottom:20px;
+    }
+
+    .form-group label{
+      display:block;
+      margin-bottom:8px;
+      font-size:14px;
+      font-weight:500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea{
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-size:14px;
+    }
+
+    .form-group textarea{
+      resize:vertical;
+      min-height:100px;
+    }
+
+    .submit-btn{
+      padding:12px 20px;
+      background:black;
+      color:white;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:14px;
+      transition:0.3s;
+    }
+
+    .submit-btn:hover{
+      opacity:0.8;
+    }
+
+    .delete-btn{
+      position:absolute;
+      bottom:20px;
+      right:80px;
+      padding:6px 12px;
+      background:#dc3545;
+      color:white;
+      border:none;
+      border-radius:6px;
+      font-size:11px;
+      cursor:pointer;
+      opacity:0;
+      transition:0.3s;
+    }
+
+    .notice-card:hover .delete-btn{
+      opacity:1;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header id="navbar">
+  <div><strong>Campus Intelligence</strong></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="resources.html">Resources</a>
+    <a href="community.html">Community</a>
+    <a href="profile.html">Profile</a>
+    <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Official Noticeboard</h1>
+  <p>Verified announcements published by administration</p>
+</section>
+
+<div class="notice-container" id="noticesContainer">
+  <p style="text-align:center;color:#666">Loading notices...</p>
+</div>
+
+<!-- ADD NOTICE MODAL -->
+<div class="modal" id="addNoticeModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Create New Notice</h2>
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+    </div>
+    <form onsubmit="submitNotice(event)">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="noticeTitle" required placeholder="Enter notice title">
+      </div>
+      <div class="form-group">
+        <label>Content</label>
+        <textarea id="noticeBody" required placeholder="Enter notice content"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Priority</label>
+        <select id="noticePriority" required>
+          <option value="normal">Normal</option>
+          <option value="important">Important</option>
+          <option value="emergency">Emergency</option>
+        </select>
+      </div>
+      <button type="submit" class="submit-btn">Create Notice</button>
+    </form>
+  </div>
+</div>
+
+<button class="add-notice-btn" onclick="openModal()" id="addNoticeBtn" style="display:none;">
+  + Add Notice
+</button>
+
+<script>
+  function escapeHtml(s) {
+    if (s == null) return "";
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function getPriorityClass(priority) {
+    return priority === "important" ? "important" : priority === "emergency" ? "emergency" : "normal";
+  }
+
+  function getPriorityLabel(priority) {
+    return priority === "important" ? "Important" : priority === "emergency" ? "Emergency" : "Normal";
+  }
+
+  async function loadNotices() {
+    const container = document.getElementById("noticesContainer");
+    
+    try {
+      console.log("Loading notices from /api/notices...");
+      const res = await fetch("/api/notices", { credentials: "include" });
+      
+      if (!res.ok) {
+        console.error("Notices API error:", res.status, res.statusText);
+        container.innerHTML = `<p style='text-align:center;color:#c00'>Error ${res.status}: Could not load notices. Check server logs.</p>`;
+        return;
+      }
+      
+      const json = await res.json();
+      console.log("Notices response:", json);
+      
+      if (!json.success) {
+        container.innerHTML = "<p style='text-align:center;color:#c00'>Could not load notices: " + (json.message || "Unknown error") + "</p>";
+        return;
+      }
+      
+      const notices = json.data || [];
+      container.innerHTML = "";
+      
+      if (notices.length === 0) {
+        container.innerHTML = "<p style='text-align:center;color:#666'>No notices yet. Admins can create one using the + button.</p>";
+        return;
+      }
+      
+      const isAdmin = localStorage.getItem("userRole") === "admin";
+      
+      notices.forEach(notice => {
+        const priorityClass = getPriorityClass(notice.priority);
+        const priorityLabel = getPriorityLabel(notice.priority);
+        const date = new Date(notice.created_at).toLocaleString();
+        const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteNotice(event, ${notice.id})">Delete</button>` : "";
+        
+        container.innerHTML += `
+          <div class="notice-card" onclick="onNoticeClick(${notice.id})" style="cursor:pointer;">
+            <div class="badge ${priorityClass}">${priorityLabel}</div>
+            ${deleteBtn}
+            <div class="notice-title">${escapeHtml(notice.title)}</div>
+            <div class="notice-content">${escapeHtml(notice.body)}</div>
+            <div class="notice-meta">Posted: ${date}</div>
+          </div>
+        `;
+      });
+    } catch (err) {
+      console.error("Error loading notices:", err);
+      container.innerHTML = `<p style='text-align:center;color:#c00'>Network error: ${err.message}. Make sure the server is running on port 3000.</p>`;
+    }
+  }
+
+  async function onNoticeClick(noticeId) {
+    // local UX tracking
+    localStorage.setItem("lastNoticeViewed", new Date().toISOString());
+
+    // DB tracking (only works if logged in)
+    try {
+      const res = await fetch(`/api/notices/${noticeId}/view`, {
+        method: "POST",
+        credentials: "include"
+      });
+      if (res.ok) {
+        // Update local counter only when backend accepts the view
+        const currentCount = parseInt(localStorage.getItem("noticesViewedCount") || "0", 10);
+        localStorage.setItem("noticesViewedCount", (currentCount + 1).toString());
+      }
+    } catch (err) {
+      // ignore
+    }
+  }
+
+  function openModal() {
+    document.getElementById("addNoticeModal").classList.add("active");
+  }
+
+  function closeModal() {
+    document.getElementById("addNoticeModal").classList.remove("active");
+    document.getElementById("noticeTitle").value = "";
+    document.getElementById("noticeBody").value = "";
+    document.getElementById("noticePriority").value = "normal";
+  }
+
+  async function submitNotice(event) {
+    event.preventDefault();
+    
+    const title = document.getElementById("noticeTitle").value.trim();
+    const body = document.getElementById("noticeBody").value.trim();
+    const priority = document.getElementById("noticePriority").value;
+    
+    if (!title || !body) {
+      alert("Please fill all fields.");
+      return;
+    }
+    
+    try {
+      const res = await fetch("/api/notices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ title, body, priority })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok || !data.success) {
+        if (res.status === 403) {
+          alert("Only admins can create notices.");
+        } else {
+          alert(data.message || "Failed to create notice.");
+        }
+        return;
+      }
+      
+      alert("Notice created successfully!");
+      closeModal();
+      loadNotices();
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error. Is the server running?");
+    }
+  }
+
+  async function deleteNotice(ev, id) {
+    if (ev) ev.stopPropagation();
+    if (!confirm("Are you sure you want to delete this notice?")) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/notices/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok || !data.success) {
+        if (res.status === 403) {
+          alert("Only admins can delete notices.");
+        } else {
+          alert(data.message || "Failed to delete notice.");
+        }
+        return;
+      }
+      
+      alert("Notice deleted successfully!");
+      loadNotices();
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error.");
+    }
+  }
+
+  // Check admin and show add button
+  const isAdmin = localStorage.getItem("userRole") === "admin";
+  if (isAdmin) {
+    document.getElementById("addNoticeBtn").style.display = "block";
+  }
+
+  // Load notices on page load
+  loadNotices();
+  
+  // Close modal on outside click
+  document.getElementById("addNoticeModal").addEventListener("click", function(e) {
+    if (e.target === this) {
+      closeModal();
+    }
+  });
+</script>
+
+<!-- Browser Notifications -->
+<script src="js/notifications.js"></script>
+<script src="js/admin-nav.js"></script>
+
+</body>
+</html>

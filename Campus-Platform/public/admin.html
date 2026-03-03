@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:"Segoe UI",sans-serif;
+    }
+
+    body{
+      background:#f5f7fa;
+      color:black;
+    }
+
+    /* NAVBAR */
+    #navbar{
+      position:fixed;
+      top:0;
+      width:100%;
+      height:70px;
+      background:black;
+      color:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 60px;
+      z-index:1000;
+    }
+
+    #navbar nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:28px;
+      font-size:14px;
+      transition:0.3s;
+    }
+
+    #navbar nav a:hover{
+      opacity:0.7;
+    }
+
+    /* HERO */
+    .hero{
+      margin-top:70px;
+      padding:60px 20px;
+      background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);
+      color:white;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:36px;
+      margin-bottom:10px;
+    }
+
+    /* STATS GRID */
+    .stats-section{
+      max-width:1400px;
+      margin:40px auto;
+      padding:0 20px;
+    }
+
+    .stats-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+      margin-bottom:40px;
+    }
+
+    .stat-card{
+      background:white;
+      border-radius:16px;
+      padding:25px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+
+    .stat-card:hover{
+      transform:translateY(-5px);
+      box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .stat-label{
+      font-size:13px;
+      color:#666;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+
+    .stat-value{
+      font-size:32px;
+      font-weight:700;
+      color:#333;
+    }
+
+    .stat-sub{
+      font-size:12px;
+      color:#999;
+      margin-top:5px;
+    }
+
+    /* USERS TABLE */
+    .users-section{
+      max-width:1400px;
+      margin:40px auto;
+      padding:0 20px;
+    }
+
+    .section-title{
+      font-size:24px;
+      margin-bottom:20px;
+      color:#333;
+    }
+
+    .table-container{
+      background:white;
+      border-radius:16px;
+      padding:25px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+      overflow-x:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th{
+      text-align:left;
+      padding:12px;
+      background:#f8f9fa;
+      font-weight:600;
+      font-size:13px;
+      color:#666;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+
+    td{
+      padding:15px 12px;
+      border-top:1px solid #eee;
+      font-size:14px;
+    }
+
+    tr:hover{
+      background:#f8f9fa;
+    }
+
+    .role-badge{
+      display:inline-block;
+      padding:4px 12px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:600;
+    }
+
+    .role-admin{
+      background:#dc3545;
+      color:white;
+    }
+
+    .role-student{
+      background:#28a745;
+      color:white;
+    }
+
+    .action-btn{
+      padding:6px 12px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      font-size:12px;
+      margin-right:5px;
+      transition:0.3s;
+    }
+
+    .btn-danger{
+      background:#dc3545;
+      color:white;
+    }
+
+    .btn-danger:hover{
+      background:#c82333;
+    }
+
+    .btn-secondary{
+      background:#6c757d;
+      color:white;
+    }
+
+    .btn-secondary:hover{
+      background:#5a6268;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:768px){
+      #navbar{
+        padding:0 20px;
+      }
+
+      #navbar nav a{
+        margin-left:15px;
+        font-size:12px;
+      }
+
+      .hero h1{
+        font-size:28px;
+      }
+
+      .stats-grid{
+        grid-template-columns:1fr;
+      }
+
+      .table-container{
+        overflow-x:scroll;
+      }
+
+      table{
+        min-width:600px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="navbar">
+  <div><strong>Admin Dashboard</strong></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="resources.html">Resources</a>
+    <a href="community.html">Community</a>
+    <a href="noticeboard.html">Noticeboard</a>
+    <a href="profile.html">Profile</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Administrative Control Panel</h1>
+  <p>Manage users, monitor system activity, and oversee platform operations</p>
+</section>
+
+<div class="stats-section">
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-label">Total Users</div>
+      <div class="stat-value" id="totalUsers">-</div>
+      <div class="stat-sub" id="usersBreakdown">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Posts</div>
+      <div class="stat-value" id="totalPosts">-</div>
+      <div class="stat-sub" id="postsBreakdown">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Resources</div>
+      <div class="stat-value" id="totalResources">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Notices</div>
+      <div class="stat-value" id="totalNotices">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Recent Activity</div>
+      <div class="stat-value" id="recentPosts">-</div>
+      <div class="stat-sub">Posts (7 days)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">New Users</div>
+      <div class="stat-value" id="recentUsers">-</div>
+      <div class="stat-sub">Last 7 days</div>
+    </div>
+  </div>
+</div>
+
+<div class="users-section">
+  <h2 class="section-title">User Management</h2>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Posts</th>
+          <th>Joined</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="usersTable">
+        <tr><td colspan="7" style="text-align:center;padding:40px;">Loading users...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function checkAdmin() {
+    const role = localStorage.getItem("userRole");
+    if (role !== "admin") {
+      alert("Access denied. Admin privileges required.");
+      window.location.href = "index.html";
+      return false;
+    }
+    return true;
+  }
+
+  async function loadStats() {
+    try {
+      const res = await fetch("/api/admin/stats", { credentials: "include" });
+      const json = await res.json();
+      
+      if (!json.success) {
+        if (res.status === 403) {
+          alert("Admin access required.");
+          window.location.href = "index.html";
+          return;
+        }
+        console.error("Stats error:", json.message);
+        return;
+      }
+      
+      const stats = json.data;
+      document.getElementById("totalUsers").innerText = stats.users.total;
+      document.getElementById("usersBreakdown").innerText = `${stats.users.admins} admins, ${stats.users.students} students`;
+      document.getElementById("totalPosts").innerText = stats.posts.total;
+      document.getElementById("postsBreakdown").innerText = `${stats.posts.updates} updates, ${stats.posts.queries} queries`;
+      document.getElementById("totalResources").innerText = stats.resources;
+      document.getElementById("totalNotices").innerText = stats.notices;
+      document.getElementById("recentPosts").innerText = stats.recent.posts;
+      document.getElementById("recentUsers").innerText = stats.recent.users;
+    } catch (err) {
+      console.error("Error loading stats:", err);
+    }
+  }
+
+  async function loadUsers() {
+    try {
+      const res = await fetch("/api/admin/users", { credentials: "include" });
+      const json = await res.json();
+      
+      if (!json.success) {
+        if (res.status === 403) {
+          alert("Admin access required.");
+          window.location.href = "index.html";
+          return;
+        }
+        console.error("Users error:", json.message);
+        return;
+      }
+      
+      const users = json.data || [];
+      const tbody = document.getElementById("usersTable");
+      
+      if (users.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='7' style='text-align:center;padding:40px;'>No users found.</td></tr>";
+        return;
+      }
+      
+      tbody.innerHTML = users.map(u => {
+        const date = new Date(u.created_at).toLocaleDateString();
+        const roleClass = u.role === "admin" ? "role-admin" : "role-student";
+        const roleLabel = u.role.charAt(0).toUpperCase() + u.role.slice(1);
+        const currentUserId = parseInt(localStorage.getItem("userId") || "0");
+        const isCurrentUser = u.id === currentUserId;
+        const toggleRole = u.role === "admin" ? "student" : "admin";
+        const toggleLabel = u.role === "admin" ? "Demote" : "Promote";
+        
+        return `
+          <tr>
+            <td>${u.id}</td>
+            <td>${escapeHtml(u.name || "")}</td>
+            <td>${escapeHtml(u.email)}</td>
+            <td><span class="role-badge ${roleClass}">${roleLabel}</span></td>
+            <td>${u.post_count || 0}</td>
+            <td>${date}</td>
+            <td>
+              ${!isCurrentUser ? `
+                <button class="action-btn btn-secondary" onclick="toggleRole(${u.id}, '${toggleRole}')">${toggleLabel}</button>
+                <button class="action-btn btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+              ` : '<span style="color:#999;">Current User</span>'}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    } catch (err) {
+      console.error("Error loading users:", err);
+      document.getElementById("usersTable").innerHTML = "<tr><td colspan='7' style='text-align:center;padding:40px;color:#c00;'>Error loading users.</td></tr>";
+    }
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return "";
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  async function toggleRole(userId, newRole) {
+    if (!confirm(`Are you sure you want to ${newRole === "admin" ? "promote" : "demote"} this user?`)) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/role`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ role: newRole })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok || !data.success) {
+        alert(data.message || "Failed to update role.");
+        return;
+      }
+      
+      alert("User role updated successfully!");
+      loadUsers();
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error.");
+    }
+  }
+
+  async function deleteUser(userId) {
+    if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(`/api/admin/users/${userId}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok || !data.success) {
+        alert(data.message || "Failed to delete user.");
+        return;
+      }
+      
+      alert("User deleted successfully!");
+      loadUsers();
+      loadStats();
+    } catch (err) {
+      console.error("Error:", err);
+      alert("Network error.");
+    }
+  }
+
+  if (checkAdmin()) {
+    loadStats();
+    loadUsers();
+    // Refresh every 30 seconds
+    setInterval(() => {
+      loadStats();
+      loadUsers();
+    }, 30000);
+  }
+</script>
+
+</body>
+</html>

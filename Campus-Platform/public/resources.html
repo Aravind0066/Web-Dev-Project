@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campus Resources</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:"Segoe UI",sans-serif;
+    }
+
+    body{
+      background:white;
+      color:black;
+    }
+
+    /* NAVBAR */
+    #navbar{
+      position:fixed;
+      top:0;
+      width:100%;
+      height:70px;
+      background:black;
+      color:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 60px;
+      z-index:1000;
+    }
+
+    #navbar nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:28px;
+      font-size:14px;
+      transition:0.3s;
+    }
+
+    #navbar nav a:hover{
+      opacity:0.7;
+    }
+
+    /* HERO */
+    .hero{
+      margin-top:70px;
+      padding:80px 20px;
+      background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);
+      color:white;
+      text-align:center;
+    }
+
+    .hero h1{
+      font-size:38px;
+      margin-bottom:12px;
+    }
+
+    .hero p{
+      font-size:16px;
+      opacity:0.9;
+    }
+
+    /* FILTER SECTION */
+    .filters{
+      max-width:1100px;
+      margin:40px auto;
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+      padding:0 20px;
+    }
+
+    .filters input,
+    .filters select{
+      padding:12px 14px;
+      border-radius:8px;
+      border:1px solid #ccc;
+      font-size:14px;
+    }
+
+    .filters button{
+      padding:12px 18px;
+      border:none;
+      background:black;
+      color:white;
+      border-radius:8px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .filters button:hover{
+      opacity:0.8;
+    }
+
+    /* MAP SECTION */
+    .map-section{
+      max-width:1100px;
+      margin:50px auto;
+      padding:0 20px;
+    }
+
+    .map-card{
+      background:white;
+      border-radius:18px;
+      padding:30px;
+      box-shadow:0 20px 45px rgba(0,0,0,0.08);
+    }
+
+    .map-container{
+      width:100%;
+      height:350px;
+      border-radius:12px;
+      background:#f3f6ff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    svg{
+      width:90%;
+      height:90%;
+    }
+
+    .building{
+      fill:#667eea;
+      transition:0.3s;
+      cursor:pointer;
+    }
+
+    .building:hover{
+      fill:#764ba2;
+    }
+
+    /* RESOURCE LIST */
+    .resource-list{
+      max-width:1100px;
+      margin:60px auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:25px;
+      padding:0 20px;
+    }
+
+    .resource-card{
+      background:white;
+      border-radius:16px;
+      padding:25px;
+      box-shadow:0 18px 40px rgba(0,0,0,0.08);
+      transition:0.3s;
+    }
+
+    .resource-card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 28px 60px rgba(0,0,0,0.12);
+    }
+
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:20px;
+      font-size:12px;
+      margin-top:10px;
+    }
+
+    .open{
+      background:#d4edda;
+      color:#155724;
+    }
+
+    .closed{
+      background:#f8d7da;
+      color:#721c24;
+    }
+
+    .admin-actions{
+      margin-top:15px;
+      display:none;
+    }
+
+    .admin-actions button{
+      padding:6px 10px;
+      border:none;
+      border-radius:6px;
+      margin-right:8px;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .edit-btn{
+      background:#ffc107;
+    }
+
+    .delete-btn{
+      background:#dc3545;
+      color:white;
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header id="navbar">
+  <div><strong>Campus Intelligence</strong></div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="community.html">Community</a>
+    <a href="noticeboard.html">Noticeboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Interactive Campus Resource Map</h1>
+  <p>Explore verified campus facilities, buildings, and operational details.</p>
+</section>
+
+<!-- FILTERS -->
+<div class="filters">
+  <input type="text" id="resourceSearch" placeholder="Search resource..." oninput="loadResources()">
+  <select id="resourceTypeFilter" onchange="loadResources()">
+    <option value="">All Categories</option>
+    <option value="lab">Lab</option>
+    <option value="library">Library</option>
+    <option value="cafeteria">Cafeteria</option>
+    <option value="sports">Sports</option>
+    <option value="academic">Academic</option>
+  </select>
+  <select id="buildingFilter" onchange="loadResources()">
+    <option value="">All Buildings</option>
+    <option value="BLDG_LIB">Library Building</option>
+    <option value="BLDG_CS">CS Building</option>
+    <option value="BLDG_SPORTS">Sports Complex</option>
+  </select>
+  <button onclick="loadResources()">Apply Filters</button>
+</div>
+
+<!-- MAP -->
+<div class="map-section">
+  <div class="map-card">
+    <div class="map-container">
+      <svg viewBox="0 0 500 300">
+        <rect id="ab1" class="building" x="50" y="80" width="100" height="80"/>
+        <rect id="ab2" class="building" x="200" y="60" width="120" height="90"/>
+        <rect id="sports" class="building" x="370" y="100" width="100" height="100"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCE LIST (filled by API) -->
+<div class="resource-list" id="resourceList">
+</div>
+
+<script>
+  let allResources = [];
+
+  function escapeHtml(s) {
+    if (!s) return "";
+    const div = document.createElement("div");
+    div.textContent = s;
+    return div.innerHTML;
+  }
+
+  function filterResources(resources) {
+    const search = document.getElementById("resourceSearch").value.toLowerCase();
+    const typeFilter = document.getElementById("resourceTypeFilter").value;
+    const buildingFilter = document.getElementById("buildingFilter").value;
+
+    return resources.filter(r => {
+      const matchesSearch = !search || 
+        r.name.toLowerCase().includes(search) || 
+        r.type.toLowerCase().includes(search) ||
+        (r.description && r.description.toLowerCase().includes(search));
+      const matchesType = !typeFilter || r.type.toLowerCase() === typeFilter.toLowerCase();
+      const matchesBuilding = !buildingFilter || r.building_code === buildingFilter;
+      
+      return matchesSearch && matchesType && matchesBuilding;
+    });
+  }
+
+  function renderResources(resources) {
+    const listEl = document.getElementById("resourceList");
+    const buildings = document.querySelectorAll(".building");
+
+    listEl.innerHTML = "";
+    
+    if (resources.length === 0) {
+      listEl.innerHTML = "<p style='text-align:center;color:#666'>No resources match your filters.</p>";
+      return;
+    }
+
+    resources.forEach((r, i) => {
+      const card = document.createElement("div");
+      card.className = "resource-card";
+      const openClass = r.is_open ? "open" : "closed";
+      const adminBlock = localStorage.getItem("userRole") === "admin"
+        ? '<div class="admin-actions"><button class="edit-btn">Edit</button><button class="delete-btn">Delete</button></div>'
+        : '<div class="admin-actions" style="display:none"></div>';
+      card.innerHTML = `
+        <h3>${escapeHtml(r.name)}</h3>
+        <p>${r.floor ? "Floor: " + escapeHtml(r.floor) + " | " : ""}${escapeHtml(r.type)}</p>
+        <span class="badge ${openClass}">${r.is_open ? "Open" : "Closed"}</span>
+        ${adminBlock}
+      `;
+      const linkWrap = () => { window.location.href = "resource-details.html?id=" + r.id; };
+      card.addEventListener("click", (e) => { if (!e.target.closest(".admin-actions")) linkWrap(); });
+      listEl.appendChild(card);
+
+      if (buildings[i] && r.building_code) {
+        buildings[i].onclick = () => (window.location.href = "resource-details.html?id=" + r.id);
+      }
+    });
+  }
+
+  async function loadResources() {
+    const listEl = document.getElementById("resourceList");
+    
+    try {
+      if (allResources.length === 0) {
+        const res = await fetch("/api/resources", { credentials: "include" });
+        const json = await res.json();
+        allResources = json.success ? json.data : [];
+      }
+
+      const filtered = filterResources(allResources);
+      renderResources(filtered);
+
+      if (allResources.length === 0) {
+        listEl.innerHTML = "<p style='text-align:center;color:#666'>No resources yet.</p>";
+      }
+    } catch (err) {
+      console.error(err);
+      listEl.innerHTML = "<p style='text-align:center;color:#c00'>Could not load resources. Is the server running?</p>";
+    }
+  }
+
+  loadResources();
+</script>
+
+<script src="js/admin-nav.js"></script>
+</body>
+</html>

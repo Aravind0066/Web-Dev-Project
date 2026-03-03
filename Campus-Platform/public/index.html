@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Campus Intelligence System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:"Segoe UI",sans-serif;
+    }
+
+    body{
+      background:white;
+      color:black;
+    }
+
+    /* NAVBAR */
+    #navbar{
+      position:fixed;
+      top:0;
+      width:100%;
+      height:70px;
+      background:black;
+      color:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:0 60px;
+      z-index:1000;
+    }
+
+    #navbar nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:28px;
+      font-size:14px;
+      transition:0.3s;
+    }
+
+    #navbar nav a:hover{
+      opacity:0.7;
+    }
+
+    /* HERO SECTION */
+    .hero{
+      margin-top:70px;
+      height:55vh;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:white;
+      padding:20px;
+    }
+
+    .hero-content{
+      max-width:800px;
+      animation:fadeUp 1s ease;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(30px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .hero h1{
+      font-size:42px;
+      margin-bottom:16px;
+    }
+
+    .hero p{
+      font-size:18px;
+      opacity:0.9;
+    }
+
+    /* DASHBOARD SECTION */
+    .dashboard{
+      max-width:1200px;
+      margin:80px auto;
+      padding:0 40px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:white;
+      border-radius:18px;
+      padding:35px;
+      box-shadow:0 20px 45px rgba(0,0,0,0.08);
+      transition:0.3s;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:0 30px 60px rgba(0,0,0,0.12);
+    }
+
+    .card h3{
+      font-size:22px;
+      margin-bottom:12px;
+    }
+
+    .card p{
+      font-size:14px;
+      color:#666;
+      line-height:1.6;
+    }
+
+    footer{
+      text-align:center;
+      padding:40px;
+      color:#888;
+      font-size:14px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width:768px){
+      #navbar{
+        padding:0 20px;
+      }
+
+      #navbar nav a{
+        margin-left:10px;
+        font-size:12px;
+      }
+
+      .hero{
+        height:auto;
+        padding:40px 20px;
+      }
+
+      .hero h1{
+        font-size:28px;
+      }
+
+      .hero p{
+        font-size:16px;
+      }
+
+      .dashboard{
+        grid-template-columns:1fr;
+        padding:0 20px;
+        margin:40px auto;
+      }
+
+      .card{
+        padding:25px;
+      }
+    }
+
+    @media (max-width:480px){
+      #navbar{
+        height:60px;
+        flex-wrap:wrap;
+      }
+
+      #navbar nav{
+        display:flex;
+        flex-wrap:wrap;
+        gap:10px;
+      }
+
+      #navbar nav a{
+        margin-left:0;
+        font-size:11px;
+      }
+
+      .hero h1{
+        font-size:24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header id="navbar">
+  <div><strong>Campus Intelligence</strong></div>
+  <nav>
+    <a href="resources.html">Resources</a>
+    <a href="community.html">Community</a>
+    <a href="noticeboard.html">Noticeboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Campus Information & Community Intelligence</h1>
+    <p>
+      A structured digital ecosystem combining permanent campus resources,
+      real-time community updates, and official administrative announcements.
+    </p>
+  </div>
+</section>
+
+<section class="dashboard">
+
+  <div class="card" onclick="location.href='resources.html'">
+    <h3>Interactive Resource Map</h3>
+    <p>
+      Explore campus buildings, floors, facilities, contact information, 
+      and operational details through a structured and interactive map interface.
+    </p>
+  </div>
+
+  <div class="card" onclick="location.href='community.html'">
+    <h3>Community Updates & Queries</h3>
+    <p>
+      Access real-time updates shared by students and participate in 
+      structured query discussions to reduce information redundancy.
+    </p>
+  </div>
+
+  <div class="card" onclick="location.href='noticeboard.html'">
+    <h3>Official Noticeboard</h3>
+    <p>
+      View verified announcements posted by administrators, with 
+      reminder tracking and priority-based notification handling.
+    </p>
+  </div>
+
+  <div class="card" onclick="location.href='profile.html'">
+    <h3>User Dashboard</h3>
+    <p>
+      Monitor your activity, posts, queries, and notice interaction history 
+      within the campus system.
+    </p>
+  </div>
+
+</section>
+
+<footer>
+  © 2026 Campus Intelligence System
+</footer>
+
+<script>
+  // Show admin link if user is admin
+  const userRole = localStorage.getItem("userRole");
+  if (userRole === "admin") {
+    document.getElementById("adminLink").style.display = "inline";
+  }
+</script>
+
+<!-- Browser Notifications -->
+<script src="js/notifications.js"></script>
+
+</body>
+</html>
+
